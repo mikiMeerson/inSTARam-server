@@ -92,4 +92,20 @@ const deleteStar = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getStars, addStar, updateStar, deleteStar };
+const getStarById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const getStar: IStar | null = await Star.findById(
+      req.params.id
+    );
+    const allStars: IStar[] = await Star.find();
+    res.status(200).json({
+      message: "Star found",
+      star: getStar,
+      stars: allStars,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { getStars, addStar, updateStar, deleteStar, getStarById };

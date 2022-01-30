@@ -44,7 +44,7 @@ const starSchema = new mongoose_1.Schema({
     },
     computer: {
         type: String,
-        required: true,
+        required: false,
     },
 }, { timestamps: true });
 exports.default = (0, mongoose_1.model)("Star", starSchema);

@@ -8,4 +8,5 @@ router.get("/stars", stars_1.getStars);
 router.post("/add-star", stars_1.addStar);
 router.put("/edit-star/:id", stars_1.updateStar);
 router.delete("/delete-star/:id", stars_1.deleteStar);
+router.get("/star/:id", stars_1.getStarById);
 exports.default = router;
