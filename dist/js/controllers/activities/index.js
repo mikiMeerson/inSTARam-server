@@ -16,8 +16,8 @@ exports.getActivityById = exports.deleteActivity = exports.updateActivity = expo
 const activity_1 = __importDefault(require("../../models/activity"));
 const getActivities = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Activities = yield (yield activity_1.default.find()).filter((n) => n.starId === req.params.starId);
-        res.status(200).json({ Activities });
+        const activities = yield (yield activity_1.default.find()).filter((a) => a.starId === req.params.starId);
+        res.status(200).json({ activities });
     }
     catch (error) {
         throw error;
@@ -26,7 +26,6 @@ const getActivities = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.getActivities = getActivities;
 const addActivity = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const body = req.body;
         const activity = new activity_1.default({
             starId: body.starId,
@@ -41,7 +40,7 @@ const addActivity = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             .json({
             message: "Activity added",
             activity: newActivity,
-            Activities: allActivities,
+            activities: allActivities,
         });
     }
     catch (error) {

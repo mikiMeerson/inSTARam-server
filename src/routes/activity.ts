@@ -11,7 +11,7 @@ const router: Router = Router();
 
 router.get("/:id", getActivities);
 
-router.get("/Activities/:starId", getActivities);
+router.get("/activities/:starId", getActivities);
 
 router.post("/add-activity", addActivity);
 

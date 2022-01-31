@@ -26,7 +26,6 @@ const getNotes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getNotes = getNotes;
 const addNote = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const body = req.body;
         const note = new note_1.default({
             starId: body.starId,

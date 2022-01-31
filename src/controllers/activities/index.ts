@@ -4,10 +4,10 @@ import Activity from "../../models/activity";
 
 const getActivities = async (req: Request, res: Response): Promise<void> => {
   try {
-    const Activities: IActivity[] = await (
+    const activities: IActivity[] = await (
       await Activity.find()
-    ).filter((n) => n.starId === req.params.starId);
-    res.status(200).json({ Activities });
+    ).filter((a) => a.starId === req.params.starId);
+    res.status(200).json({ activities });
   } catch (error) {
     throw error;
   }
@@ -35,7 +35,7 @@ const addActivity = async (req: Request, res: Response): Promise<void> => {
       .json({
         message: "Activity added",
         activity: newActivity,
-        Activities: allActivities,
+        activities: allActivities,
       });
   } catch (error) {
     throw error;
