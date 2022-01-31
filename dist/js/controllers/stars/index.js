@@ -26,7 +26,6 @@ const getStars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getStars = getStars;
 const addStar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const body = req.body;
         const star = new star_1.default({
             priority: body.priority,

@@ -4,7 +4,7 @@ import Note from "../../models/note";
 
 const getNotes = async (req: Request, res: Response): Promise<void> => {
   try {
-    const notes: INote[] = await (await Note.find()).filter((n) => n.starId === req.starId);
+    const notes: INote[] = await (await Note.find()).filter((n) => n.starId === req.params.starId);
     res.status(200).json({ notes });
   } catch (error) {
     throw error;

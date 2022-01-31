@@ -16,7 +16,7 @@ exports.getNoteById = exports.deleteNote = exports.updateNote = exports.addNote 
 const note_1 = __importDefault(require("../../models/note"));
 const getNotes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const notes = yield note_1.default.find();
+        const notes = yield (yield note_1.default.find()).filter((n) => n.starId === req.params.starId);
         res.status(200).json({ notes });
     }
     catch (error) {
@@ -29,6 +29,7 @@ const addNote = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(req.body);
         const body = req.body;
         const note = new note_1.default({
+            starId: body.starId,
             note: body.note,
             publisher: body.publisher,
             repliesTo: body.repliesTo

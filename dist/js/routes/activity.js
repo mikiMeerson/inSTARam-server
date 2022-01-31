@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const activities_1 = require("../controllers/activities");
+const router = (0, express_1.Router)();
+router.get("/:id", activities_1.getActivities);
+router.get("/Activities/:starId", activities_1.getActivities);
+router.post("/add-activity", activities_1.addActivity);
+router.put("/edit-activity/:id", activities_1.updateActivity);
+router.delete("/delete-activity/:id", activities_1.deleteActivity);
+router.get("/activity/:id", activities_1.getActivityById);
+exports.default = router;
