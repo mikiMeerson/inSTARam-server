@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteStar = exports.updateStar = exports.addStar = exports.getStars = void 0;
+exports.getStarById = exports.deleteStar = exports.updateStar = exports.addStar = exports.getStars = void 0;
 const star_1 = __importDefault(require("../../models/star"));
 const getStars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -26,7 +26,6 @@ const getStars = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getStars = getStars;
 const addStar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(req.body);
         const body = req.body;
         const star = new star_1.default({
             priority: body.priority,
@@ -83,3 +82,18 @@ const deleteStar = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteStar = deleteStar;
+const getStarById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const getStar = yield star_1.default.findById(req.params.id);
+        const allStars = yield star_1.default.find();
+        res.status(200).json({
+            message: "Star found",
+            star: getStar,
+            stars: allStars,
+        });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getStarById = getStarById;
