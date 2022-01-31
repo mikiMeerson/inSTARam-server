@@ -56,7 +56,7 @@ const updateActivity = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: "Activity updated",
       activity: updateActivity,
-      Activities: allActivities,
+      activities: allActivities,
     });
   } catch (error) {
     throw error;
@@ -72,7 +72,7 @@ const deleteActivity = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({
       message: "Activity deleted",
       activity: deletedActivity,
-      Activities: allActivities,
+      activities: allActivities,
     });
   } catch (error) {
     throw error;
