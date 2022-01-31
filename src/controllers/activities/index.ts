@@ -15,7 +15,6 @@ const getActivities = async (req: Request, res: Response): Promise<void> => {
 
 const addActivity = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.body);
     const body = req.body as Pick<
       IActivity,
       "starId" | "publisher" | "action" | "value"

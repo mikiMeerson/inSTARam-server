@@ -13,7 +13,6 @@ const getNotes = async (req: Request, res: Response): Promise<void> => {
 
 const addNote = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log(req.body);
     const body = req.body as Pick<
       INote,
       | "starId"
