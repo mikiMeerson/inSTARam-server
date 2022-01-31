@@ -76,11 +76,12 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getUserById = async (req: Request, res: Response): Promise<void> => {
+const signIn = async (req: Request, res: Response): Promise<void> => {
   try {
-    const getUser: IUser | null = await User.findById(
-      req.params.id
-    );
+    const credentials = req.body;
+    const getUser: IUser | null = await (await User.find())
+        .filter((u) => u.username === credentials.username 
+        && u.password === credentials.password)[0];
     const allUsers: IUser[] = await User.find();
     res.status(200).json({
       message: "User found",
@@ -92,4 +93,4 @@ const getUserById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getUsers, addUser, updateUser, deleteUser, getUserById };
+export { getUsers, addUser, updateUser, deleteUser, signIn };
