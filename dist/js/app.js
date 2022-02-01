@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const star_1 = __importDefault(require("./routes/star"));
 const note_1 = __importDefault(require("./routes/note"));
 const activity_1 = __importDefault(require("./routes/activity"));
+const user_1 = __importDefault(require("./routes/user"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 4000;
@@ -18,6 +19,7 @@ app.use((0, cors_1.default)());
 app.use(star_1.default);
 app.use(note_1.default);
 app.use(activity_1.default);
+app.use(user_1.default);
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.tlorz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 console.log(uri);
 mongoose_1.default
