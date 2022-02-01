@@ -6,17 +6,21 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    unit: {
+    password: {
         type: String,
         required: true,
     },
-    password: {
+    name: {
+        type: String,
+        required: true,
+    },
+    unit: {
         type: String,
         required: true,
     },
     roles: {
         type: [String],
         required: false,
-    }
+    },
 }, { timestamps: true });
 exports.default = (0, mongoose_1.model)("User", userSchema);

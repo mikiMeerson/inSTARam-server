@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
-import { INote } from "../../types/note";
-import Note from "../../models/note";
+import { INote } from "../types/note";
+import Note from "../models/note";
 
 const getNotes = async (req: Request, res: Response): Promise<void> => {
   try {
