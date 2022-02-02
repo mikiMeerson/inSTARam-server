@@ -22,20 +22,30 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
       | "roles"
     >;
 
-    const user: IUser = new User({
-      username: body.username,
-      password: body.password,
-      name: body.name,
-      unit: body.unit,
-      roles: [],
-    });
+    const existingUser: IUser | null = await (await User.find()).filter(
+      (u) => u.username === body.username
+    )[0];
 
-    const newUser: IUser = await user.save();
-    const allUsers: IUser[] = await User.find();
+    if (existingUser) {
+      res
+        .status(409)
+        .json({ message: "User already exists" });
+    } else {
+      const user: IUser = new User({
+        username: body.username,
+        password: body.password,
+        name: body.name,
+        unit: body.unit,
+        roles: [],
+      });
 
-    res
-      .status(201)
-      .json({ message: "User added", user: newUser, users: allUsers });
+      const newUser: IUser = await user.save();
+      const allUsers: IUser[] = await User.find();
+
+      res
+        .status(201)
+        .json({ message: "User added", user: newUser, users: allUsers });
+    }
   } catch (error) {
     throw error;
   }
@@ -78,23 +88,6 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getUser = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const user: IUser | null = await (await User.find()).filter(
-      (u) => u.username === req.params.username
-    )[0];
-    const allUsers: IUser[] = await User.find();
-
-    res.status(200).json({
-      message: "User found",
-      user: user,
-      users: allUsers,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
-
 const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password } = req.body;
@@ -103,16 +96,20 @@ const login = async (req: Request, res: Response): Promise<void> => {
       (u) => u.username === username && u.password === password
     )[0];
 
-    const allUsers: IUser[] = await User.find();
+    if (user) {
+      const allUsers: IUser[] = await User.find();
 
-    res.status(200).json({
-      message: "User found",
-      user: user,
-      users: allUsers,
-    });
+      res.status(200).json({
+        message: "User found",
+        user: user,
+        users: allUsers,
+      });
+    } else {
+      res.status(400).json({ message: "wrong credentials" });
+    }
   } catch (error) {
     throw error;
   }
 };
 
-export { getUsers, addUser, updateUser, deleteUser, getUser, login };
+export { getUsers, addUser, updateUser, deleteUser, login };

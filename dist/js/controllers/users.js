@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.getUser = exports.deleteUser = exports.updateUser = exports.addUser = exports.getUsers = void 0;
+exports.login = exports.deleteUser = exports.updateUser = exports.addUser = exports.getUsers = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -27,18 +27,26 @@ exports.getUsers = getUsers;
 const addUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
-        const user = new user_1.default({
-            username: body.username,
-            password: body.password,
-            name: body.name,
-            unit: body.unit,
-            roles: [],
-        });
-        const newUser = yield user.save();
-        const allUsers = yield user_1.default.find();
-        res
-            .status(201)
-            .json({ message: "User added", user: newUser, users: allUsers });
+        const existingUser = yield (yield user_1.default.find()).filter((u) => u.username === body.username)[0];
+        if (existingUser) {
+            res
+                .status(409)
+                .json({ message: "User already exists" });
+        }
+        else {
+            const user = new user_1.default({
+                username: body.username,
+                password: body.password,
+                name: body.name,
+                unit: body.unit,
+                roles: [],
+            });
+            const newUser = yield user.save();
+            const allUsers = yield user_1.default.find();
+            res
+                .status(201)
+                .json({ message: "User added", user: newUser, users: allUsers });
+        }
     }
     catch (error) {
         throw error;
@@ -76,32 +84,22 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
-const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const user = yield (yield user_1.default.find()).filter((u) => u.username === req.params.username)[0];
-        const allUsers = yield user_1.default.find();
-        res.status(200).json({
-            message: "User found",
-            user: user,
-            users: allUsers,
-        });
-    }
-    catch (error) {
-        throw error;
-    }
-});
-exports.getUser = getUser;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
         console.log(req.body);
         const user = yield (yield user_1.default.find()).filter((u) => u.username === username && u.password === password)[0];
-        const allUsers = yield user_1.default.find();
-        res.status(200).json({
-            message: "User found",
-            user: user,
-            users: allUsers,
-        });
+        if (user) {
+            const allUsers = yield user_1.default.find();
+            res.status(200).json({
+                message: "User found",
+                user: user,
+                users: allUsers,
+            });
+        }
+        else {
+            res.status(400).json({ message: "wrong credentials" });
+        }
     }
     catch (error) {
         throw error;
