@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
-import { IStar } from "../../types/star";
-import Star from "../../models/star";
+import { IStar } from "../types/star";
+import Star from "../models/star";
 
 const getStars = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -36,11 +36,11 @@ const addStar = async (req: Request, res: Response): Promise<void> => {
       status: body.status,
       assignee: body.assignee,
       version: body.version,
-      publisher: 'miki',
+      publisher: "miki",
       event: body.event,
       resources: [],
       desc: body.desc,
-      computer: body.computer
+      computer: body.computer,
     });
 
     const newStar: IStar = await star.save();
@@ -93,9 +93,7 @@ const deleteStar = async (req: Request, res: Response): Promise<void> => {
 
 const getStarById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const getStar: IStar | null = await Star.findById(
-      req.params.id
-    );
+    const getStar: IStar | null = await Star.findById(req.params.id);
     const allStars: IStar[] = await Star.find();
     res.status(200).json({
       message: "Star found",

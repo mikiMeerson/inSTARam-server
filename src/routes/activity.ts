@@ -5,7 +5,7 @@ import {
   updateActivity,
   deleteActivity,
   getActivityById,
-} from "../controllers/activities";
+} from "../controllers/activity";
 
 const router: Router = Router();
 

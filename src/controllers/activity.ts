@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
-import { IActivity } from "../../types/activity";
-import Activity from "../../models/activity";
+import { IActivity } from "../types/activity";
+import Activity from "../models/activity";
 
 const getActivities = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -30,13 +30,11 @@ const addActivity = async (req: Request, res: Response): Promise<void> => {
     const newActivity: IActivity = await activity.save();
     const allActivities: IActivity[] = await Activity.find();
 
-    res
-      .status(201)
-      .json({
-        message: "Activity added",
-        activity: newActivity,
-        activities: allActivities,
-      });
+    res.status(201).json({
+      message: "Activity added",
+      activity: newActivity,
+      activities: allActivities,
+    });
   } catch (error) {
     throw error;
   }
