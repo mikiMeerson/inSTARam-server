@@ -9,7 +9,7 @@ const { createJWT } = require("../utils/auth");
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users: IUser[] | null = await User.find();
-    res.status(200).json({ message: "hi", users: users });
+    res.status(200).json({ users });
   } catch (error) {
     throw error;
   }
@@ -21,10 +21,6 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
       IUser,
       "username" | "password" | "name" | "unit" | "roles"
     >;
-
-    const existingUser: IUser | null = await (
-      await User.find()
-    ).filter((u) => u.username === body.username)[0];
 
     User.findOne({ username: body.username }).then((user) => {
       if (user) {
