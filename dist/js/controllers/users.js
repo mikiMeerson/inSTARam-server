@@ -12,21 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.deleteUser = exports.updateUser = exports.addUser = exports.getUsers = void 0;
+exports.login = exports.deleteUser = exports.updateUser = exports.addUser = exports.getAllUsers = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { createJWT } = require("../utils/auth");
-const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_1.default.find();
-        res.status(200).json({ users });
+        res.status(200).json({ message: "hi", users: users });
     }
     catch (error) {
         throw error;
     }
 });
-exports.getUsers = getUsers;
+exports.getAllUsers = getAllUsers;
 const addUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
@@ -123,13 +123,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                             .json({ message: "Wrong username or password" });
                     }
                     let access_token = createJWT(user.username, user._id, 3600);
-                    console.log(access_token);
-                    console.log(process.env.TOKEN_SECRET);
                     jwt.verify(access_token, process.env.TOKEN_SECRET, (err, decoded) => {
                         if (err) {
                             res.status(500).json({ erros: err });
                         }
-                        console.log("here");
                         if (decoded) {
                             return res.status(200).json({
                                 success: true,

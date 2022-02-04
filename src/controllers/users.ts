@@ -6,10 +6,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { createJWT } = require("../utils/auth");
 
-const getUsers = async (req: Request, res: Response): Promise<void> => {
+const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users: IUser[] = await User.find();
-    res.status(200).json({ users });
+    const users: IUser[] | null = await User.find();
+    res.status(200).json({ message: "hi", users: users });
   } catch (error) {
     throw error;
   }
@@ -149,4 +149,4 @@ const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getUsers, addUser, updateUser, deleteUser, login };
+export { getAllUsers, addUser, updateUser, deleteUser, login };
