@@ -3,7 +3,7 @@ import { getAllUsers, addUser, updateUser, deleteUser, login } from "../controll
 
 const router: Router = Router()
 
-router.use("/all-users", getAllUsers)
+router.get("/all-users", getAllUsers)
 
 router.post("/add-user", addUser)
 

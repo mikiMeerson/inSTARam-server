@@ -36,7 +36,7 @@ const addStar = async (req: Request, res: Response): Promise<void> => {
       status: body.status,
       assignee: body.assignee,
       version: body.version,
-      publisher: "miki",
+      publisher: body.publisher,
       event: body.event,
       resources: [],
       desc: body.desc,
