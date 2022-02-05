@@ -3,7 +3,7 @@ import { getNotes, addNote, updateNote, deleteNote, getNoteById } from "../contr
 
 const router: Router = Router()
 
-router.get("/:id", getNotes)
+router.get("/note/:id", getNotes)
 
 router.get("/notes/:starId", getNotes)
 

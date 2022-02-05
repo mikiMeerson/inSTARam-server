@@ -9,7 +9,7 @@ import {
 
 const router: Router = Router();
 
-router.get("/:id", getActivities);
+router.get("/activity/:id", getActivities);
 
 router.get("/activities/:starId", getActivities);
 
