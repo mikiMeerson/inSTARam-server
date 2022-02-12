@@ -19,9 +19,9 @@ const userSchema: Schema = new Schema(
             type: String,
             required: true,
         },
-        roles: {
-            type: [String],
-            required: false,
+        role: {
+            type: String,
+            required: true,
         },
     },
     { timestamps: true }

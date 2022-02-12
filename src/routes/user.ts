@@ -1,9 +1,11 @@
 import { Router } from "express"
-import { getAllUsers, addUser, updateUser, deleteUser, login } from "../controllers/users"
+import { getAllUsers, getUserById, addUser, updateUser, deleteUser, login } from "../controllers/users"
 
 const router: Router = Router()
 
 router.get("/all-users", getAllUsers)
+
+router.get("/user/:id", getUserById)
 
 router.post("/add-user", addUser)
 

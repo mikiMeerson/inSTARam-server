@@ -15,11 +15,25 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getUserById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const getUser: IUser | null = await User.findById(req.params.id);
+    const allUsers: IUser[] = await User.find();
+    res.status(200).json({
+      message: "User found",
+      user: getUser,
+      users: allUsers,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const addUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<
       IUser,
-      "username" | "password" | "name" | "unit" | "roles"
+      "username" | "password" | "name" | "unit" | "role"
     >;
 
     User.findOne({ username: body.username }).then((user) => {
@@ -31,7 +45,7 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
           password: body.password,
           name: body.name,
           unit: body.unit,
-          roles: [],
+          role: 'viewer',
         });
 
         bcrypt.genSalt(10, function (err: any, salt: any) {
@@ -145,4 +159,4 @@ const login = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getAllUsers, addUser, updateUser, deleteUser, login };
+export { getAllUsers, getUserById, addUser, updateUser, deleteUser, login };
