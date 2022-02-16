@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { getAllUsers, addUser, updateUser, deleteUser, login } from "../controllers/users"
+import { getAllUsers, getUserById, addUser, updateUser, deleteUser, login } from "../controllers/users"
 
 const router: Router = Router()
 
@@ -8,6 +8,8 @@ const router: Router = Router()
 // This way you can also allow an optional query parameter of a name, id, etc.
 // to get a specific user in the same endpoint, which is convenient for API users.
 router.get("/all-users", getAllUsers)
+
+router.get("/user/:id", getUserById)
 
 router.post("/add-user", addUser)
 

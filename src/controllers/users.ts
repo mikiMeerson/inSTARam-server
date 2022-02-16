@@ -16,11 +16,25 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const getUser: IUser | null = await User.findById(req.params.id);
+    const allUsers: IUser[] = await User.find();
+    res.status(StatusCodes.OK).json({
+      message: "User found",
+      user: getUser,
+      users: allUsers,
+    });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not find user' });
+  }
+};
+
 export const addUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<
       IUser,
-      "username" | "password" | "name" | "unit" | "roles"
+      "username" | "password" | "name" | "unit" | "role"
     >;
 
     User.findOne({ username: body.username }).then((user) => {
@@ -32,7 +46,7 @@ export const addUser = async (req: Request, res: Response): Promise<void> => {
           password: body.password,
           name: body.name,
           unit: body.unit,
-          roles: [],
+          role: 'viewer',
         });
 
         bcrypt.genSalt(10, function (err: any, salt: any) {
@@ -144,4 +158,4 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({ message: 'could not login' });
   }
-};
+}
