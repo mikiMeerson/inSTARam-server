@@ -2,26 +2,15 @@ import { Router } from "express";
 import {
   getActivities,
   addActivity,
-  updateActivity,
   deleteActivity,
-  getActivityById,
 } from "../controllers/activity";
 
 const router: Router = Router();
 
-router.get("/activity/:id", getActivities);
-
 router.get("/activities/:starId", getActivities);
 
-router.post("/add-activity", addActivity);
+router.post("/activities", addActivity);
 
-router.put("/edit-activity/:id", updateActivity);
-
-router.delete("/delete-activity/:id", deleteActivity);
-
-// ! Dor Review
-// This is the same endpoint as the one defined first here,
-// probably by mistake.
-router.get("/activity/:id", getActivityById);
+router.delete("/activities/:id", deleteActivity);
 
 export default router;

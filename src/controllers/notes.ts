@@ -73,19 +73,3 @@ export const deleteNote = async (req: Request, res: Response): Promise<void> => 
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not delete note' });
   }
 };
-
-export const getNoteById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const getNote: INote | null = await Note.findById(
-      req.params.id
-    );
-    const allNotes: INote[] = await Note.find();
-    res.status(StatusCodes.OK).json({
-      message: "Note found",
-      note: getNote,
-      notes: allNotes,
-    });
-  } catch (error) {
-    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not find note' });
-  }
-};

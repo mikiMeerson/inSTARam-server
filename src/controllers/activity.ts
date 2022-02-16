@@ -40,27 +40,6 @@ export const addActivity = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const updateActivity = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const {
-      params: { id },
-      body,
-    } = req;
-    const updateActivity: IActivity | null = await Activity.findByIdAndUpdate(
-      { _id: id },
-      body
-    );
-    const allActivities: IActivity[] = await Activity.find();
-    res.status(StatusCodes.OK).json({
-      message: "Activity updated",
-      activity: updateActivity,
-      activities: allActivities,
-    });
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not update activity' })
-  }
-};
-
 export const deleteActivity = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedActivity: IActivity | null = await Activity.findByIdAndRemove(req.params.id);
@@ -72,19 +51,5 @@ export const deleteActivity = async (req: Request, res: Response): Promise<void>
     });
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not delete activity' })
-  }
-};
-
-export const getActivityById = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const getActivity: IActivity | null = await Activity.findById(req.params.id);
-    const allActivities: IActivity[] = await Activity.find();
-    res.status(StatusCodes.OK).json({
-      message: "Activity found",
-      activity: getActivity,
-      Activities: allActivities,
-    });
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not find activity' })
   }
 };
