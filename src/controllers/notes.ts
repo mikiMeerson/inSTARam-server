@@ -1,17 +1,18 @@
 import { Response, Request } from "express";
+import { StatusCodes } from 'http-status-codes';
 import { INote } from "../types/note";
 import Note from "../models/note";
 
-const getNotes = async (req: Request, res: Response): Promise<void> => {
+export const getNotes = async (req: Request, res: Response): Promise<void> => {
   try {
     const notes: INote[] = await (await Note.find()).filter((n) => n.starId === req.params.starId);
-    res.status(200).json({ notes });
+    res.status(StatusCodes.OK).json({ notes });
   } catch (error) {
-    throw error;
+    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not get notes' });
   }
 };
 
-const addNote = async (req: Request, res: Response): Promise<void> => {
+export const addNote = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<
       INote,
@@ -32,64 +33,59 @@ const addNote = async (req: Request, res: Response): Promise<void> => {
     const allNotes: INote[] = await Note.find();
 
     res
-      .status(201)
+      .status(StatusCodes.CREATED)
       .json({ message: "Note added", note: newNote, notes: allNotes });
   } catch (error) {
-    throw error;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not create note' });
   }
 };
 
-const updateNote = async (req: Request, res: Response): Promise<void> => {
+export const updateNote = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {
-      params: { id },
-      body,
-    } = req;
+    const { params: { id }, body} = req;
     const updateNote: INote | null = await Note.findByIdAndUpdate(
       { _id: id },
       body
     );
     const allNotes: INote[] = await Note.find();
-    res.status(200).json({
+    res.status(StatusCodes.OK).json({
       message: "Note updated",
       note: updateNote,
       notes: allNotes,
     });
   } catch (error) {
-    throw error;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not update note' });
   }
 };
 
-const deleteNote = async (req: Request, res: Response): Promise<void> => {
+export const deleteNote = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedNote: INote | null = await Note.findByIdAndRemove(
       req.params.id
     );
     const allNotes: INote[] = await Note.find();
-    res.status(200).json({
+    res.status(StatusCodes.OK).json({
       message: "Note deleted",
       note: deletedNote,
       notes: allNotes,
     });
   } catch (error) {
-    throw error;
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not delete note' });
   }
 };
 
-const getNoteById = async (req: Request, res: Response): Promise<void> => {
+export const getNoteById = async (req: Request, res: Response): Promise<void> => {
   try {
     const getNote: INote | null = await Note.findById(
       req.params.id
     );
     const allNotes: INote[] = await Note.find();
-    res.status(200).json({
+    res.status(StatusCodes.OK).json({
       message: "Note found",
       note: getNote,
       notes: allNotes,
     });
   } catch (error) {
-    throw error;
+    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not find note' });
   }
 };
-
-export { getNotes, addNote, updateNote, deleteNote, getNoteById };
