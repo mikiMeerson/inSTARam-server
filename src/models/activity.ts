@@ -15,10 +15,7 @@ const Activitieschema: Schema = new Schema(
       type: String,
       required: true,
     },
-    value: {
-      type: String,
-      required: false,
-    },
+    value: String
   },
   { timestamps: true }
 );
