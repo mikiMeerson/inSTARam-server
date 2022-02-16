@@ -3,6 +3,10 @@ import { getAllUsers, addUser, updateUser, deleteUser, login } from "../controll
 
 const router: Router = Router()
 
+// ! Dor Review
+// GET /users is the convention I think.
+// This way you can also allow an optional query parameter of a name, id, etc.
+// to get a specific user in the same endpoint, which is convenient for API users.
 router.get("/all-users", getAllUsers)
 
 router.post("/add-user", addUser)

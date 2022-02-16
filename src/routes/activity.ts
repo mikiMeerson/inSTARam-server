@@ -19,6 +19,9 @@ router.put("/edit-activity/:id", updateActivity);
 
 router.delete("/delete-activity/:id", deleteActivity);
 
+// ! Dor Review
+// This is the same endpoint as the one defined first here,
+// probably by mistake.
 router.get("/activity/:id", getActivityById);
 
 export default router;
