@@ -2,13 +2,21 @@ import { Response, Request } from "express";
 import { IActivity } from "../types/activity";
 import Activity from "../models/activity";
 
+// ! Dor Review
+// You can use StatusCodes package instead of actual numbers.
+
 const getActivities = async (req: Request, res: Response): Promise<void> => {
   try {
-    const activities: IActivity[] = await (
-      await Activity.find()
-    ).filter((a) => a.starId === req.params.starId);
+    const activities: IActivity[] = (await Activity.find())
+      .filter((a) => a.starId === req.params.starId);
     res.status(200).json({ activities });
   } catch (error) {
+    // ! Dor Review
+    // The request will hang if you don't return a status here.
+    // You can, instead, use a router to wrap all requests by a handler
+    // that upon exception will return a basic 500 or something, but it's
+    // not needed for now in my opinion.
+    // This applies to all endpoints in which it happens.
     throw error;
   }
 };
@@ -93,6 +101,9 @@ const getActivityById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// ! Dor Review
+// A more readable code will be exporting each function right at declaration.
+// You can use `export const funcName = async () => {}`.
 export {
   getActivities,
   addActivity,
