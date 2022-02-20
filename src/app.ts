@@ -6,6 +6,7 @@ import starRoutes from "./routes/star"
 import noteRoutes from "./routes/note"
 import activityRoutes from "./routes/activity"
 import userRoutes from "./routes/user"
+import eventRoutes from "./routes/event"
 
 import bodyParser from "body-parser"
 
@@ -23,6 +24,7 @@ app.use(starRoutes)
 app.use(noteRoutes)
 app.use(activityRoutes)
 app.use(userRoutes)
+app.use(eventRoutes)
 
 app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, '../../front/public/index.html'), function(err) {
