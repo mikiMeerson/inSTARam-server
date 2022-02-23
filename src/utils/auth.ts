@@ -1,12 +1,17 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import { tokenSecret } from "../";
 
-exports.createJWT = (username: string, userId: string, duration: number) => {
-   const payload = {
-      username,
-      userId,
-      duration
-   };
-   return jwt.sign(payload, process.env.TOKEN_SECRET, {
-     expiresIn: duration,
-   });
+export const createJWT = (
+  username: string,
+  userId: string,
+  duration: number
+) => {
+  const payload = {
+    username,
+    userId,
+    duration,
+  };
+  return jwt.sign(payload, tokenSecret, {
+    expiresIn: duration,
+  });
 };

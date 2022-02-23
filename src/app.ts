@@ -1,37 +1,34 @@
-import express, { Express } from "express"
-import mongoose from "mongoose"
-import cors from "cors"
+import express, { Express } from "express";
 
-import starRoutes from "./routes/star"
-import noteRoutes from "./routes/note"
-import activityRoutes from "./routes/activity"
-import userRoutes from "./routes/user"
+import bodyParser from "body-parser";
+import cors from "cors";
 
-import bodyParser from "body-parser"
+import starRoutes from "./routes/star";
+import noteRoutes from "./routes/note";
+import activityRoutes from "./routes/activity";
+import userRoutes from "./routes/user";
 
-const app: Express = express()
+import { mongooseConnection } from "./";
 
-const PORT: string | number = process.env.PORT || 4000
+const app: Express = express();
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
+const PORT: string | number = process.env.PORT || 4000;
 
-app.use(starRoutes)
-app.use(noteRoutes)
-app.use(activityRoutes)
-app.use(userRoutes)
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
-const uri: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.tlorz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
-console.log(uri);
+app.use(starRoutes);
+app.use(noteRoutes);
+app.use(activityRoutes);
+app.use(userRoutes);
 
-mongoose
-  .connect(uri)
+mongooseConnection()
   .then(() =>
     app.listen(PORT, () =>
       console.log(`Server running on http://localhost:${PORT}`)
     )
   )
-  .catch(error => {
-    throw error
-  })
+  .catch((error) => {
+    throw error;
+  });
