@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import e, { Response, Request } from "express";
 import { StatusCodes } from "http-status-codes";
 import { IStar } from "../types/star";
 import Star from "../models/star";
@@ -72,16 +72,25 @@ export const updateStar = async (
       params: { id },
       body,
     } = req;
-    const updateStar: IStar | null = await Star.findByIdAndUpdate(
-      { _id: id },
-      body
-    );
-    const allStars: IStar[] = await Star.find();
-    res.status(StatusCodes.OK).json({
-      message: "Star updated",
-      star: updateStar,
-      stars: allStars,
-    });
+    const originalStar: IStar | null = await Star.findById(id);
+    if (originalStar) {
+      body.notes = originalStar.notes;
+      body.activity = originalStar.activity;
+
+      const updateStar: IStar | null = await Star.findByIdAndUpdate(
+        { _id: id },
+        body
+      );
+      const allStars: IStar[] = await Star.find();
+      res.status(StatusCodes.OK).json({
+        message: "Star updated",
+        star: updateStar,
+        stars: allStars,
+      });
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json({ message: 'Could not find star'});
+    }
+    
   } catch (error) {
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
