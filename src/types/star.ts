@@ -1,4 +1,6 @@
 import { Document } from "mongoose"
+import { IActivity } from "./activity";
+import { INote } from "./note";
 
 export interface IStar extends Document {
   priority: number;
@@ -12,5 +14,7 @@ export interface IStar extends Document {
   event: string;
   resources: string[];
   desc: string;
-  computer?: string;
+  computer: string;
+  notes: INote[];
+  activity: IActivity[];
 }

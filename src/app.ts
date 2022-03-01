@@ -3,8 +3,6 @@ import mongoose from "mongoose"
 import cors from "cors"
 
 import starRoutes from "./routes/star"
-import noteRoutes from "./routes/note"
-import activityRoutes from "./routes/activity"
 import userRoutes from "./routes/user"
 import eventRoutes from "./routes/event"
 
@@ -21,8 +19,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
 app.use(starRoutes)
-app.use(noteRoutes)
-app.use(activityRoutes)
 app.use(userRoutes)
 app.use(eventRoutes)
 

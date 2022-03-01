@@ -83,11 +83,15 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       params: { id },
       body,
     } = req;
+    console.log(id);
+    console.log(body);
     const updateUser: IUser | null = await User.findByIdAndUpdate(
       { _id: id },
       body
     );
     const allUsers: IUser[] = await User.find();
+
+    console.log(updateUser);
     res.status(StatusCodes.OK).json({
       message: "User updated",
       user: updateUser,
@@ -129,7 +133,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
           .then((isMatch: boolean) => {
             if (!isMatch) {
               return res
-                .status(StatusCodes.BAD_REQUEST)
+                .status(StatusCodes.NOT_FOUND)
                 .json({ message: "Wrong username or password" });
             }
             let access_token = createJWT(user.username, user._id, 3600);

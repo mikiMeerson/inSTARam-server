@@ -1,14 +1,16 @@
 import { Response, Request } from "express";
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from "http-status-codes";
 import { IStar } from "../types/star";
 import Star from "../models/star";
+import { INote } from "../types/note";
+import { IActivity } from "../types/activity";
 
 export const getStars = async (req: Request, res: Response): Promise<void> => {
   try {
     const stars: IStar[] = await Star.find();
     res.status(StatusCodes.OK).json({ stars });
   } catch (error) {
-    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not get stars' });
+    res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
   }
 };
 
@@ -28,6 +30,8 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       | "resources"
       | "desc"
       | "computer"
+      | "notes"
+      | "activity"
     >;
 
     const star: IStar = new Star({
@@ -42,6 +46,8 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       resources: [],
       desc: body.desc,
       computer: body.computer,
+      notes: [],
+      activity: [],
     });
 
     const newStar: IStar = await star.save();
@@ -51,11 +57,16 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       .status(StatusCodes.CREATED)
       .json({ message: "Star added", star: newStar, stars: allStars });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not create star' });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "could not create star" });
   }
 };
 
-export const updateStar = async (req: Request, res: Response): Promise<void> => {
+export const updateStar = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const {
       params: { id },
@@ -72,11 +83,16 @@ export const updateStar = async (req: Request, res: Response): Promise<void> => 
       stars: allStars,
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not update star' });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "could not update star" });
   }
 };
 
-export const deleteStar = async (req: Request, res: Response): Promise<void> => {
+export const deleteStar = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const deletedStar: IStar | null = await Star.findByIdAndRemove(
       req.params.id
@@ -88,11 +104,16 @@ export const deleteStar = async (req: Request, res: Response): Promise<void> => 
       stars: allStars,
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not delete star' });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "could not delete star" });
   }
 };
 
-export const getStarById = async (req: Request, res: Response): Promise<void> => {
+export const getStarById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const getStar: IStar | null = await Star.findById(req.params.id);
     const allStars: IStar[] = await Star.find();
@@ -102,6 +123,117 @@ export const getStarById = async (req: Request, res: Response): Promise<void> =>
       stars: allStars,
     });
   } catch (error) {
-    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not find star' });
+    res.status(StatusCodes.NOT_FOUND).json({ message: "could not find star" });
+  }
+};
+
+export const addActivity = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      params: { id },
+      body,
+    } = req;
+    const star: IStar | null = await Star.findById(id);
+    if (star) {
+      star.activity.push({
+        publisher: body.publisher,
+        action: body.action,
+        value: body.value,
+      } as IActivity);
+      await star.save();
+      const stars = await Star.find();
+      
+      res.status(StatusCodes.CREATED).json({
+        message: "Activity added",
+        star,
+        stars,
+      });
+    } else {
+      res.status(StatusCodes.NOT_FOUND)
+        .json({ message: "could not find star" });
+    }
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "could not add activity" });
+  }
+};
+
+export const addNote = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      params: { id },
+      body,
+    } = req;
+    const star: IStar | null = await Star.findById(id);
+    if (star) {
+      star.notes.push({
+        note: body.note,
+        publisher: body.publisher,
+        repliesTo: body.repliesTo,
+      } as INote);
+      star.activity.push({
+        publisher: body.publisher,
+        action: 'הוסיפ/ה הערה חדשה',
+      } as IActivity);
+
+      await star.save();
+      const stars = await Star.find();
+      res.status(StatusCodes.CREATED).json({
+        message: "Note added",
+        star,
+        stars,
+      });
+    } else {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "could not find star" });
+    }
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "could not add note" });
+  }
+};
+
+const deleteNotes = async (noteId: string, star: IStar): Promise<void> => {
+  const replies = star.notes.filter((n) => n.id === noteId);
+  replies.forEach(async (r) => {
+    await Star.findByIdAndUpdate(
+      { _id: star._id },
+      { $pull: { notes: { _id: r._id } } }
+    );
+    deleteNotes(r._id, star);
+  });
+};
+
+export const removeNote = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      params: { starId },
+      body,
+    } = req;
+    let star = await Star.findById(starId);
+    if (star) {
+      await deleteNotes(body.noteId, star);
+    }
+
+    star = await Star.findById(starId);
+    const stars = await Star.find();
+    res.status(StatusCodes.OK).json({
+      message: "Note removed",
+      star,
+      stars,
+    });
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "could not remove note" });
   }
 };
