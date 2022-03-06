@@ -24,7 +24,8 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       | "status"
       | "assignee"
       | "date"
-      | "version"
+      | "platform"
+      | "block"
       | "publisher"
       | "event"
       | "resources"
@@ -40,7 +41,8 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       name: body.name,
       status: body.status,
       assignee: body.assignee,
-      version: body.version,
+      platform: body.platform,
+      block: body.block,
       publisher: body.publisher,
       event: body.event,
       resources: [],

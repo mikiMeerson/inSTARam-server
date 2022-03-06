@@ -54,7 +54,11 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
-		version: {
+		platform: {
+			type: String,
+			required: true,
+		},
+		block: {
 			type: String,
 			required: true,
 		},

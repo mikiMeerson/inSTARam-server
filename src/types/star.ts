@@ -9,7 +9,8 @@ export interface IStar extends Document {
   status: string;
   assignee: string;
   date: string;
-  version: string;
+  platform: string;
+  block: string;
   publisher: string;
   event: string;
   resources: string[];
