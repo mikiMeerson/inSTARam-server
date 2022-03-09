@@ -1,14 +1,12 @@
 import express, { Express } from "express"
 import mongoose from "mongoose"
 import cors from "cors"
-
+import { join } from "path";
 import starRoutes from "./routes/star"
 import userRoutes from "./routes/user"
 import eventRoutes from "./routes/event"
 
 import bodyParser from "body-parser"
-
-var path = require('path');
 
 const app: Express = express()
 
@@ -23,7 +21,7 @@ app.use(userRoutes)
 app.use(eventRoutes)
 
 app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '../../front/public/index.html'), function(err) {
+  res.sendFile(join(__dirname, '../../front/public/index.html'), function(err) {
     if (err) {
       res.status(500).send(err)
     }
