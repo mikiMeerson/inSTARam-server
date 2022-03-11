@@ -19,10 +19,14 @@ const userSchema: Schema = new Schema(
             type: String,
             required: true,
         },
-        roles: {
+        role: {
+            type: String,
+            required: true,
+        },
+        watchList: {
             type: [String],
             required: false,
-        },
+        }
     },
     { timestamps: true }
 )
