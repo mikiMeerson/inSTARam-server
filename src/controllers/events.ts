@@ -105,4 +105,21 @@ export const deleteEvent = async (req: Request, res: Response): Promise<void> =>
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not delete event' });
   }
-};``
+};
+
+export const getEventById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const getEvent: IEvent | null = await Event.findById(req.params.id);
+    const allEvents: IEvent[] = await Event.find();
+    res.status(StatusCodes.OK).json({
+      message: "Event found",
+      event: getEvent,
+      events: allEvents,
+    });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: "could not find event" });
+  }
+};
