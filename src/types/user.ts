@@ -5,5 +5,6 @@ export interface IUser extends Document {
     password: string;
     name: string;
     unit: string;
-    roles: string[];
+    role: 'viewer' | 'editor' | 'admin';
+    watchList: string[];
 }
