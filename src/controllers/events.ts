@@ -68,7 +68,6 @@ export const addEvent = async (req: Request, res: Response): Promise<void> => {
       .status(StatusCodes.CREATED)
       .json({ message: "Event added", event: newEvent, events: allEvents });
   } catch (error) {
-    console.log(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'could not create event' });
   }
 };

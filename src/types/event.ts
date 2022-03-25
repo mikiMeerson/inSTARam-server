@@ -1,5 +1,10 @@
 import { Document } from "mongoose"
 
+interface IWeaponConfig extends Document {
+  sta: string;
+  weapon: string;
+};
+
 export interface IEvent extends Document {
   _id: string;
   name: string;
@@ -18,17 +23,7 @@ export interface IEvent extends Document {
   goals?: string[];
   dataSources?: string[];
   configuration?: {
-    weapons: {
-      '2L': string;
-      '2': string;
-      '2R': string;
-      'LCFT': string;
-      '5': string;
-      'RCFT': string;
-      '8L': string;
-      '8': string;
-      '8R': string;
-    },
+    weapons: IWeaponConfig[],
     versions: {
       AAA: string;
       BBB: string;

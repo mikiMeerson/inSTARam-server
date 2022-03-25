@@ -1,6 +1,20 @@
 import { IEvent } from "../types/event"
 import { model, Schema } from "mongoose"
 
+const weaponConfigSchema: Schema = new Schema(
+	{
+		sta: {
+			type: String,
+			required: true,
+		},
+		weapon: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true }
+);
+
 const eventSchema: Schema = new Schema(
 	{
 		name: {
@@ -40,44 +54,7 @@ const eventSchema: Schema = new Schema(
 		goals: [String],
 		dataSources: [String],
         configuration: {
-			weapons: {
-				'2L': {
-					type: String,
-					required: true,
-				},
-				'2': {
-					type: String,
-					required: true,
-				},
-				'2R': {
-					type: String,
-					required: true,
-				},
-				'LCFT': {
-					type: String,
-					required: true,
-				},
-				'5': {
-					type: String,
-					required: true,
-				},
-				'RCFT': {
-					type: String,
-					required: true,
-				},
-				'8L': {
-					type: String,
-					required: true,
-				},
-				'8': {
-					type: String,
-					required: true,
-				},
-				'8R': {
-					type: String,
-					required: true,
-				},
-			},
+			weapons: [weaponConfigSchema],
             versions: {
 				AAA: {
                 	type: String,

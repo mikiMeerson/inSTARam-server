@@ -4,7 +4,7 @@ import { INote } from "./note";
 
 export interface IStar extends Document {
   priority: number;
-  severity: number;
+  severity: string;
   name: string;
   status: string;
   assignee: string;

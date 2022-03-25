@@ -83,15 +83,12 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       params: { id },
       body,
     } = req;
-    console.log(id);
-    console.log(body);
     const updateUser: IUser | null = await User.findByIdAndUpdate(
       { _id: id },
       body
     );
     const allUsers: IUser[] = await User.find();
 
-    console.log(updateUser);
     res.status(StatusCodes.OK).json({
       message: "User updated",
       user: updateUser,
