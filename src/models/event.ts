@@ -15,6 +15,20 @@ const weaponConfigSchema: Schema = new Schema(
 	{ timestamps: true }
 );
 
+const versionConfigSchema: Schema = new Schema(
+	{
+		comp: {
+			type: String,
+			required: true,
+		},
+		version: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true }
+);
+
 const eventSchema: Schema = new Schema(
 	{
 		name: {
@@ -55,24 +69,7 @@ const eventSchema: Schema = new Schema(
 		dataSources: [String],
         configuration: {
 			weapons: [weaponConfigSchema],
-            versions: {
-				AAA: {
-                	type: String,
-                	required: true,
-				},
-				BBB: {
-					type: String,
-					required: true,
-				},
-				CCC: {
-					type: String,
-					required: true,
-				},
-				DDD: {
-					type: String,
-					required: true,
-				},
-			}
+            versions: [versionConfigSchema],
         },
 		description: [String],
 		findings: [String],

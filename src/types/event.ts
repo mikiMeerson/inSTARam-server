@@ -5,6 +5,11 @@ interface IWeaponConfig extends Document {
   weapon: string;
 };
 
+interface IVersionConfig extends Document {
+  comp: string;
+  version: string;
+};
+
 export interface IEvent extends Document {
   _id: string;
   name: string;
@@ -22,14 +27,9 @@ export interface IEvent extends Document {
   generalSummary?: string[];
   goals?: string[];
   dataSources?: string[];
-  configuration?: {
+  configuration: {
     weapons: IWeaponConfig[],
-    versions: {
-      AAA: string;
-      BBB: string;
-      CCC: string;
-      DDD: string;
-    },
+    versions: IVersionConfig[],
   },
   description?: string[];
   findings?: string[];
