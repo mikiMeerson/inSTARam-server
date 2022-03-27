@@ -39,10 +39,7 @@ const eventSchema: Schema = new Schema(
             type: String,
             required: true,
         },
-		assignee: {
-			type: String,
-			required: true,
-		},
+		assignee: String,
 		block: {
 			type: String,
 			required: true,

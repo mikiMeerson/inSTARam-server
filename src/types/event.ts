@@ -15,7 +15,7 @@ export interface IEvent extends Document {
   name: string;
   publisher: string;
   type: string;
-  assignee: string;
+  assignee?: string;
   block: string;
   platform: string;
   dates: Date[];
