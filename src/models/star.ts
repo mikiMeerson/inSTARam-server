@@ -66,10 +66,6 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
-		event: {
-			type: String,
-			required: true,
-		},
 		resources: {
 			type: [String],
 			required: true,
@@ -82,6 +78,7 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
+		event: String,
 		notes: {
 			type: [noteSchema],
 			required: true,

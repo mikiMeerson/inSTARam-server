@@ -27,14 +27,14 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       | "platform"
       | "block"
       | "publisher"
-      | "event"
       | "resources"
       | "desc"
       | "computer"
+      | "event"
       | "notes"
       | "activity"
     >;
-
+  
     const star: IStar = new Star({
       priority: body.priority,
       severity: body.severity,

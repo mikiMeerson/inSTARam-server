@@ -12,10 +12,10 @@ export interface IStar extends Document {
   platform: string;
   block: string;
   publisher: string;
-  event: string;
   resources: string[];
   desc: string;
   computer: string;
+  event?: string;
   notes: INote[];
   activity: IActivity[];
 }
