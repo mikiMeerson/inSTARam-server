@@ -227,15 +227,22 @@ export const removeNote = async (
 ): Promise<void> => {
   try {
     const {
-      params: { starId },
+      params: { id },
       body,
     } = req;
-    let star = await Star.findById(starId);
+    let star = await Star.findById(id);
     if (star) {
       await deleteNotes(body.noteId, star);
+      await Star.findByIdAndUpdate(
+        { _id: star._id },
+        { $pull: { notes: { _id: body.noteId } } }
+      );
+    } else {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "could not find star" });
     }
-
-    star = await Star.findById(starId);
+    star = await Star.findById(id);
     const stars = await Star.find();
     res.status(StatusCodes.OK).json({
       message: "Note removed",
