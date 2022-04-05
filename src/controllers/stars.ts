@@ -5,6 +5,35 @@ import Star from "../models/star";
 import { INote } from "../types/note";
 import { IActivity } from "../types/activity";
 
+export const EDITABLE_ATTR_ACTIVITY: (keyof IStar)[] = [
+  'status',
+  'assignee',
+  'computer',
+];
+
+export const ACTIVITY_INFO = [
+  {
+    name: 'status',
+    action: 'שינת/ה את הסטטוס',
+    isValue: true,
+  },
+  {
+    name: 'assignee',
+    action: 'שינת/ה את האחראי',
+    isValue: true,
+  },
+  {
+    name: 'resources',
+    action: 'עדכנ/ה משאבים נדרשים',
+    isValue: false,
+  },
+  {
+    name: 'computer',
+    action: 'שינת/ה את המערכת',
+    isValue: true,
+  },
+];
+
 export const getStars = async (req: Request, res: Response): Promise<void> => {
   try {
     const stars: IStar[] = await Star.find();
@@ -52,6 +81,11 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       activity: [],
     });
 
+    star.activity.push({
+      publisher: body.publisher,
+      action: 'יצר/ה את הסטאר',
+    } as IActivity);
+
     const newStar: IStar = await star.save();
     const allStars: IStar[] = await Star.find();
 
@@ -78,6 +112,19 @@ export const updateStar = async (
     if (originalStar) {
       body.notes = originalStar.notes;
       body.activity = originalStar.activity;
+
+      EDITABLE_ATTR_ACTIVITY.forEach((attr) => {
+        if ((originalStar[attr] !== body[attr])
+          && !(originalStar[attr].includes(body[attr]) 
+          && body[attr].includes(originalStar[attr]))) {
+          const info = ACTIVITY_INFO.find((a) => a.name === attr);
+          info && body.activity.push({
+            publisher: body.publisher,
+            action: info.action,
+            value: info.isValue ? body[attr] : '',
+          } as IActivity);    
+        }
+      });
 
       const updateStar: IStar | null = await Star.findByIdAndUpdate(
         { _id: id },
@@ -138,7 +185,7 @@ export const getStarById = async (
   }
 };
 
-export const addActivity = async (
+const addActivity = async (
   req: Request,
   res: Response
 ): Promise<void> => {
