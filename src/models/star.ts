@@ -66,6 +66,10 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
+		contact: {
+			type: String,
+			required: true,
+		},
 		resources: {
 			type: [String],
 			required: true,

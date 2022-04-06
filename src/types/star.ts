@@ -12,6 +12,7 @@ export interface IStar extends Document {
   platform: string;
   block: string;
   publisher: string;
+  contact: string;
   resources: string[];
   desc: string;
   computer: string;
