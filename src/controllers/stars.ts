@@ -55,6 +55,18 @@ export const getStarsByPlatform = async (req: Request, res: Response): Promise<v
   }
 };
 
+export const getStarsByEvent = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      params: { eventId },
+    } = req;
+    const stars: IStar[] = await (await Star.find()).filter((s) => s.event === eventId);
+    res.status(StatusCodes.OK).json({ stars });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
+  }
+};
+
 export const addStar = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<
