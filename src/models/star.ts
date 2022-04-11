@@ -62,6 +62,10 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
+		phase: {
+			type: String,
+			required: true,
+		},
 		publisher: {
 			type: String,
 			required: true,

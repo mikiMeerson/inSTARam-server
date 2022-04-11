@@ -79,6 +79,7 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       | "date"
       | "platform"
       | "block"
+      | "phase"
       | "publisher"
       | "contact"
       | "resources"
@@ -97,6 +98,7 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       assignee: body.assignee,
       platform: body.platform,
       block: body.block,
+      phase: body.phase,
       publisher: body.publisher,
       contact: body.contact,
       event: body.event,

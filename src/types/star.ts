@@ -11,6 +11,7 @@ export interface IStar extends Document {
   date: string;
   platform: string;
   block: string;
+  phase: string;
   publisher: string;
   contact: string;
   resources: string[];
