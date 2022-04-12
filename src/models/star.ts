@@ -38,7 +38,7 @@ const starSchema: Schema = new Schema(
 			required: true,
 		},
 		severity: {
-			type: Number,
+			type: String,
 			required: true,
 		},
 		name: {
@@ -62,11 +62,15 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
+		phase: {
+			type: String,
+			required: true,
+		},
 		publisher: {
 			type: String,
 			required: true,
 		},
-		event: {
+		contact: {
 			type: String,
 			required: true,
 		},
@@ -82,6 +86,7 @@ const starSchema: Schema = new Schema(
 			type: String,
 			required: true,
 		},
+		event: String,
 		notes: {
 			type: [noteSchema],
 			required: true,

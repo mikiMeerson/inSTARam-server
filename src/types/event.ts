@@ -1,11 +1,21 @@
 import { Document } from "mongoose"
 
+interface IWeaponConfig extends Document {
+  sta: string;
+  weapon: string;
+};
+
+interface IVersionConfig extends Document {
+  comp: string;
+  version: string;
+};
+
 export interface IEvent extends Document {
   _id: string;
   name: string;
   publisher: string;
   type: string;
-  assignee: string;
+  assignee?: string;
   block: string;
   platform: string;
   dates: Date[];
@@ -17,24 +27,9 @@ export interface IEvent extends Document {
   generalSummary?: string[];
   goals?: string[];
   dataSources?: string[];
-  configuration?: {
-    weapons: {
-      '2L': string;
-      '2': string;
-      '2R': string;
-      'LCFT': string;
-      '5': string;
-      'RCFT': string;
-      '8L': string;
-      '8': string;
-      '8R': string;
-    },
-    versions: {
-      AAA: string;
-      BBB: string;
-      CCC: string;
-      DDD: string;
-    },
+  configuration: {
+    weapons: IWeaponConfig[],
+    versions: IVersionConfig[],
   },
   description?: string[];
   findings?: string[];

@@ -5,9 +5,62 @@ import Star from "../models/star";
 import { INote } from "../types/note";
 import { IActivity } from "../types/activity";
 
+export const EDITABLE_ATTR_ACTIVITY: (keyof IStar)[] = [
+  'status',
+  'assignee',
+  'computer',
+];
+
+export const ACTIVITY_INFO = [
+  {
+    name: 'status',
+    action: 'שינת/ה את הסטטוס',
+    isValue: true,
+  },
+  {
+    name: 'assignee',
+    action: 'שינת/ה את האחראי',
+    isValue: true,
+  },
+  {
+    name: 'resources',
+    action: 'עדכנ/ה משאבים נדרשים',
+    isValue: false,
+  },
+  {
+    name: 'computer',
+    action: 'שינת/ה את המערכת',
+    isValue: true,
+  },
+];
+
 export const getStars = async (req: Request, res: Response): Promise<void> => {
   try {
     const stars: IStar[] = await Star.find();
+    res.status(StatusCodes.OK).json({ stars });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
+  }
+};
+
+export const getStarsByPlatform = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      params: { platform },
+    } = req;
+    const stars: IStar[] = await (await Star.find()).filter((star) => star.platform === platform);
+    res.status(StatusCodes.OK).json({ stars });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
+  }
+};
+
+export const getStarsByEvent = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      params: { eventId },
+    } = req;
+    const stars: IStar[] = await (await Star.find()).filter((star) => star.event === eventId);
     res.status(StatusCodes.OK).json({ stars });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
@@ -26,15 +79,17 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       | "date"
       | "platform"
       | "block"
+      | "phase"
       | "publisher"
-      | "event"
+      | "contact"
       | "resources"
       | "desc"
       | "computer"
+      | "event"
       | "notes"
       | "activity"
     >;
-
+  
     const star: IStar = new Star({
       priority: body.priority,
       severity: body.severity,
@@ -43,7 +98,9 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       assignee: body.assignee,
       platform: body.platform,
       block: body.block,
+      phase: body.phase,
       publisher: body.publisher,
+      contact: body.contact,
       event: body.event,
       resources: [],
       desc: body.desc,
@@ -51,6 +108,11 @@ export const addStar = async (req: Request, res: Response): Promise<void> => {
       notes: [],
       activity: [],
     });
+
+    star.activity.push({
+      publisher: body.publisher,
+      action: 'יצר/ה את הסטאר',
+    } as IActivity);
 
     const newStar: IStar = await star.save();
     const allStars: IStar[] = await Star.find();
@@ -78,6 +140,19 @@ export const updateStar = async (
     if (originalStar) {
       body.notes = originalStar.notes;
       body.activity = originalStar.activity;
+
+      EDITABLE_ATTR_ACTIVITY.forEach((attr) => {
+        if ((originalStar[attr] !== body[attr])
+          && !(originalStar[attr].includes(body[attr]) 
+          && body[attr].includes(originalStar[attr]))) {
+          const info = ACTIVITY_INFO.find((a) => a.name === attr);
+          info && body.activity.push({
+            publisher: body.publisher,
+            action: info.action,
+            value: info.isValue ? body[attr] : '',
+          } as IActivity);    
+        }
+      });
 
       const updateStar: IStar | null = await Star.findByIdAndUpdate(
         { _id: id },
@@ -138,7 +213,7 @@ export const getStarById = async (
   }
 };
 
-export const addActivity = async (
+const addActivity = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -211,13 +286,13 @@ export const addNote = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteNotes = async (noteId: string, star: IStar): Promise<void> => {
-  const replies = star.notes.filter((n) => n.id === noteId);
-  replies.forEach(async (r) => {
+  const replies = star.notes.filter((note) => note.id === noteId);
+  replies.forEach(async (reply) => {
     await Star.findByIdAndUpdate(
       { _id: star._id },
-      { $pull: { notes: { _id: r._id } } }
+      { $pull: { notes: { _id: reply._id } } }
     );
-    deleteNotes(r._id, star);
+    deleteNotes(reply._id, star);
   });
 };
 
@@ -227,15 +302,22 @@ export const removeNote = async (
 ): Promise<void> => {
   try {
     const {
-      params: { starId },
+      params: { id },
       body,
     } = req;
-    let star = await Star.findById(starId);
+    let star = await Star.findById(id);
     if (star) {
       await deleteNotes(body.noteId, star);
+      await Star.findByIdAndUpdate(
+        { _id: star._id },
+        { $pull: { notes: { _id: body.noteId } } }
+      );
+    } else {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "could not find star" });
     }
-
-    star = await Star.findById(starId);
+    star = await Star.findById(id);
     const stars = await Star.find();
     res.status(StatusCodes.OK).json({
       message: "Note removed",

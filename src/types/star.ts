@@ -4,18 +4,20 @@ import { INote } from "./note";
 
 export interface IStar extends Document {
   priority: number;
-  severity: number;
+  severity: string;
   name: string;
   status: string;
   assignee: string;
   date: string;
   platform: string;
   block: string;
+  phase: string;
   publisher: string;
-  event: string;
+  contact: string;
   resources: string[];
   desc: string;
   computer: string;
+  event?: string;
   notes: INote[];
   activity: IActivity[];
 }
