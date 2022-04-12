@@ -12,6 +12,18 @@ export const getEvents = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const getEventsByPlatform = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      params: { platform },
+    } = req;
+    const events: IEvent[] = await (await Event.find()).filter((event) => event.platform === platform);
+    res.status(StatusCodes.OK).json({ events });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).json({ message: 'could not get events' });
+  }
+};
+
 export const addEvent = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body as Pick<

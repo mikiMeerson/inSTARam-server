@@ -11,11 +11,13 @@ export interface IStar extends Document {
   date: string;
   platform: string;
   block: string;
+  phase: string;
   publisher: string;
-  event: string;
+  contact: string;
   resources: string[];
   desc: string;
   computer: string;
+  event?: string;
   notes: INote[];
   activity: IActivity[];
 }
