@@ -1,5 +1,16 @@
 import { Router } from "express"
-import { getStars, getStarsByPlatform, getStarsByEvent, addStar, updateStar, deleteStar, getStarById, addNote, removeNote } from "../controllers/stars"
+import {
+    getStars,
+    getStarsByPlatform,
+    getStarsByEvent,
+    addStar,
+    updateStar,
+    deleteStar,
+    getStarById,
+    addNote,
+    removeNote,
+    prioritizeStar,
+ } from "../controllers/stars"
 
 const router: Router = Router()
 
@@ -21,4 +32,5 @@ router.put("/add-note/:id", addNote)
 
 router.put("/remove-note/:id", removeNote)
 
+router.put("/prioritize-star/:id", prioritizeStar);
 export default router

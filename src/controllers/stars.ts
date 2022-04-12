@@ -330,3 +330,73 @@ export const removeNote = async (
       .json({ message: "could not remove note" });
   }
 };
+
+export const prioritizeStar = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      params: { id },
+      body,
+    } = req;
+    const requestedStar: IStar | null = await Star.findById(id);
+    if (requestedStar) {
+      const starsByPlatform = await (await Star.find())
+        .filter((star) => star.platform === requestedStar.platform)
+        .sort((star1, star2) => star1.priority - star2.priority);
+
+      if (body.newPri === 0) {
+        // The star was moved from the prioritized list to the unprioritized list
+        console.log('0');
+        starsByPlatform
+          .filter((star) => star.priority > requestedStar.priority)
+          .forEach(async (star) => {
+            star.priority = star.priority - 1;
+            await Star.findByIdAndUpdate({ _id: star._id }, star);
+          });
+      } else if (requestedStar.priority === 0 && body.newPri !== 0) {
+        // The star was moved from the unprioritized list to the prioritized list
+        console.log('1');
+        starsByPlatform
+          .filter((star) => star.priority >= body.newPri )
+          .forEach(async (star) => {
+            star.priority = star.priority + 1;
+            await Star.findByIdAndUpdate({ _id: star._id }, star);
+          });
+      } else if (requestedStar.priority > body.newPri) {
+        // The star was moved up in the prioritized list
+        console.log('2');
+        starsByPlatform
+          .filter((star) => star.priority >= body.newPri && star.priority <= requestedStar.priority )
+          .forEach(async (star) => {
+            star.priority = star.priority + 1;
+            await Star.findByIdAndUpdate({ _id: star._id }, star);
+          });
+      } else if (requestedStar.priority < body.newPri) {
+        // The star was moved down in the prioritized list
+        console.log('3');
+        starsByPlatform
+          .filter((star) => star.priority >= requestedStar.priority && star.priority <= body.newPri )
+          .forEach(async (star) => {
+            star.priority = star.priority - 1;
+            await Star.findByIdAndUpdate({ _id: star._id }, star);
+          });
+      }
+      requestedStar.priority = body.newPri;
+          await Star.findByIdAndUpdate({ _id: id }, requestedStar);
+      
+      const prioritizedStar: IStar | null = await Star.findById(id);
+      const allStars: IStar[] = await Star.find();
+      res.status(StatusCodes.OK).json({
+        message: "Star was prioritized",
+        star: prioritizedStar,
+        stars: allStars,
+      });
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json({ message: 'Could not find requested star '});
+    }
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Could not prioritize star" });
+  } 
+};
