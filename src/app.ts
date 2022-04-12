@@ -1,23 +1,22 @@
-import express, { Express } from "express"
-import mongoose from "mongoose"
-import cors from "cors"
+import express, { Express } from "express";
 
+import bodyParser from "body-parser";
+import path from "path";
+import cors from "cors";
 import starRoutes from "./routes/star"
 import userRoutes from "./routes/user"
 import eventRoutes from "./routes/event"
+import { mongooseConnection } from "./";
 
-import bodyParser from "body-parser"
 
-var path = require('path');
 
 const app: Express = express()
 
-const PORT: string | number = process.env.PORT || 4000
+const PORT: string | number = process.env.PORT || 4000;
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use(starRoutes)
 app.use(userRoutes)
 app.use(eventRoutes)
@@ -30,16 +29,14 @@ app.get('/*', function(req, res) {
   })
 })
 
-const uri: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.tlorz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
-console.log(uri);
 
-mongoose
-  .connect(uri)
+
+mongooseConnection()
   .then(() =>
     app.listen(PORT, () =>
       console.log(`Server running on http://localhost:${PORT}`)
     )
   )
-  .catch(error => {
-    throw error
-  })
+  .catch((error) => {
+    throw error;
+  });

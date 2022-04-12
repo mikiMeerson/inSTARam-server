@@ -3,9 +3,10 @@ import { StatusCodes } from 'http-status-codes';
 import { IUser } from "../types/user";
 import User from "../models/user";
 
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const { createJWT } = require("../utils/auth");
+import jwt, { Secret } from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { createJWT } from "../utils/auth";
+import { tokenSecret } from "../";
 
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -136,7 +137,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             let access_token = createJWT(user.username, user._id, 3600);
             jwt.verify(
               access_token,
-              process.env.TOKEN_SECRET,
+              tokenSecret as Secret,
               (err: any, decoded: any) => {
                 if (err) {
                   res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ erros: err });
