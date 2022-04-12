@@ -17,7 +17,7 @@ export const getEventsByPlatform = async (req: Request, res: Response): Promise<
     const {
       params: { platform },
     } = req;
-    const events: IEvent[] = await (await Event.find()).filter((e) => e.platform === platform);
+    const events: IEvent[] = await (await Event.find()).filter((event) => event.platform === platform);
     res.status(StatusCodes.OK).json({ events });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({ message: 'could not get events' });

@@ -48,7 +48,7 @@ export const getStarsByPlatform = async (req: Request, res: Response): Promise<v
     const {
       params: { platform },
     } = req;
-    const stars: IStar[] = await (await Star.find()).filter((s) => s.platform === platform);
+    const stars: IStar[] = await (await Star.find()).filter((star) => star.platform === platform);
     res.status(StatusCodes.OK).json({ stars });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
@@ -60,7 +60,7 @@ export const getStarsByEvent = async (req: Request, res: Response): Promise<void
     const {
       params: { eventId },
     } = req;
-    const stars: IStar[] = await (await Star.find()).filter((s) => s.event === eventId);
+    const stars: IStar[] = await (await Star.find()).filter((star) => star.event === eventId);
     res.status(StatusCodes.OK).json({ stars });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).json({ message: "could not get stars" });
@@ -286,13 +286,13 @@ export const addNote = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteNotes = async (noteId: string, star: IStar): Promise<void> => {
-  const replies = star.notes.filter((n) => n.id === noteId);
-  replies.forEach(async (r) => {
+  const replies = star.notes.filter((note) => note.id === noteId);
+  replies.forEach(async (reply) => {
     await Star.findByIdAndUpdate(
       { _id: star._id },
-      { $pull: { notes: { _id: r._id } } }
+      { $pull: { notes: { _id: reply._id } } }
     );
-    deleteNotes(r._id, star);
+    deleteNotes(reply._id, star);
   });
 };
 
