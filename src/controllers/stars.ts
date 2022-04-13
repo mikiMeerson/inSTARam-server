@@ -348,7 +348,6 @@ export const prioritizeStar = async (
 
       if (body.newPri === 0) {
         // The star was moved from the prioritized list to the unprioritized list
-        console.log('0');
         starsByPlatform
           .filter((star) => star.priority > requestedStar.priority)
           .forEach(async (star) => {
@@ -357,7 +356,6 @@ export const prioritizeStar = async (
           });
       } else if (requestedStar.priority === 0 && body.newPri !== 0) {
         // The star was moved from the unprioritized list to the prioritized list
-        console.log('1');
         starsByPlatform
           .filter((star) => star.priority >= body.newPri )
           .forEach(async (star) => {
@@ -366,18 +364,16 @@ export const prioritizeStar = async (
           });
       } else if (requestedStar.priority > body.newPri) {
         // The star was moved up in the prioritized list
-        console.log('2');
         starsByPlatform
-          .filter((star) => star.priority >= body.newPri && star.priority <= requestedStar.priority )
+          .filter((star) => star.priority >= body.newPri && star.priority < requestedStar.priority )
           .forEach(async (star) => {
             star.priority = star.priority + 1;
             await Star.findByIdAndUpdate({ _id: star._id }, star);
           });
       } else if (requestedStar.priority < body.newPri) {
         // The star was moved down in the prioritized list
-        console.log('3');
         starsByPlatform
-          .filter((star) => star.priority >= requestedStar.priority && star.priority <= body.newPri )
+          .filter((star) => star.priority > requestedStar.priority && star.priority <= body.newPri )
           .forEach(async (star) => {
             star.priority = star.priority - 1;
             await Star.findByIdAndUpdate({ _id: star._id }, star);
