@@ -3,7 +3,7 @@ import { model, Schema } from "mongoose"
 
 const weaponConfigSchema: Schema = new Schema(
 	{
-		sta: {
+		station: {
 			type: String,
 			required: true,
 		},
@@ -17,7 +17,7 @@ const weaponConfigSchema: Schema = new Schema(
 
 const versionConfigSchema: Schema = new Schema(
 	{
-		comp: {
+		computer: {
 			type: String,
 			required: true,
 		},

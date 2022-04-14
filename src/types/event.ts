@@ -1,12 +1,12 @@
 import { Document } from "mongoose"
 
 interface IWeaponConfig extends Document {
-  sta: string;
+  station: string;
   weapon: string;
 };
 
 interface IVersionConfig extends Document {
-  comp: string;
+  computer: string;
   version: string;
 };
 
