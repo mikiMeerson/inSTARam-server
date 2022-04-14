@@ -1,42 +1,28 @@
-import express, { Express } from "express";
-
-import bodyParser from "body-parser";
+import express, { Express, json, urlencoded } from "express";
 import path from "path";
 import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import { StatusCodes } from "http-status-codes";
 import starRoutes from "./routes/star"
 import userRoutes from "./routes/user"
-import eventRoutes from "./routes/event"
-import { mongooseConnection } from "./";
+import eventRoutes from "./routes/event";
 
+const app: Express = express();
 
-
-const app: Express = express()
-
-const PORT: string | number = process.env.PORT || 4000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(cors());
+app.use(helmet());
+app.use(morgan('dev'));
 app.use(starRoutes)
 app.use(userRoutes)
 app.use(eventRoutes)
 
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, '../../front/public/index.html'), function(err) {
-    if (err) {
-      res.status(500).send(err)
-    }
-  })
-})
-
-
-
-mongooseConnection()
-  .then(() =>
-    app.listen(PORT, () =>
-      console.log(`Server running on http://localhost:${PORT}`)
-    )
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../front/public/index.html'), (err) => 
+    err && res.status(StatusCodes.INTERNAL_SERVER_ERROR)
   )
-  .catch((error) => {
-    throw error;
-  });
+});
+
+export default app;
