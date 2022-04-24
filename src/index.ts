@@ -1,14 +1,15 @@
-import mongoose from "mongoose";
+import app from './app';
+import { mongooseConnection } from './utils/mongooseConnection';
 
-const uri: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.tlorz.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
-console.log(uri);
+const PORT: string | number = process.env.PORT || 4000;
 
-export const mongooseConnection = () => {
+export const tokenSecret = process.env.TOKEN_SECRET as string;
+
+(async () => {
   try {
-    return mongoose.connect(uri);
+    await mongooseConnection();
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))
   } catch (error) {
     throw error;
   }
-};
-
-export const tokenSecret = process.env.TOKEN_SECRET as string;
+})();
